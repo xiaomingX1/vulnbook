@@ -10,8 +10,8 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys  #需要引入keys包
 import os,time,sys
 import time
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
+
+# 20211017 - 更新代码.
 
 
 def main(keyword):
@@ -26,7 +26,7 @@ def main(keyword):
     driver=webdriver.Chrome(options=options,executable_path = chrome_driver)
     #driver = webdriver.Chrome()
     for mpage in range(1,5):
-        print("https://github.com/search?o=desc&q=Java&s=stars&type=Repositories&p=%d"%mpage)
+        print("https://github.com/search?o=desc&q=%s&s=stars&type=Repositories&p=%s"%(keyword,str(mpage)))
         driver.get("https://github.com/search?o=desc&q=%s&s=stars&type=Repositories&p=%s"%(keyword,str(mpage)))
         for i in range(1,2):
             time.sleep(0.6)
@@ -38,15 +38,19 @@ def main(keyword):
         jj = 0
         for i in range(len(titles)):
             print("["+str(i)+"]"+titles[i].text + " - " + titles[i].get_attribute("href"))
-            while ("Updated" not in profiles[jj].text):
+            while (len(profiles) > jj and "Updated" not in profiles[jj].text):
                 jj = jj + 1
-            print("["+str(i)+"]"+profiles[jj].text.replace("\n","-").replace(" ","").replace("Updated","Updated-"))
+            try:
+                print("["+str(i)+"]"+profiles[jj].text.replace("\n","-").replace(" ","").replace("Updated","Updated-"))
+            except:
+                print("Error + continue ... ")
             jj = jj + 1
             print("=======================")
     time.sleep(1)
     driver.quit() 
 
 start = time.time()
-main("java")
+#main("java")
+main("telegram")
 end = time.time()
 print("总消耗时间:"+str(end-start))
